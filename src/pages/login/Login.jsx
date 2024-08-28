@@ -133,6 +133,10 @@ const Login = () => {
             </Button>
           </Form.Item>
         </Form>
+        <ul className="list-disc">
+          <li>Login: testuser</li>
+          <li>password: testuser</li>
+        </ul>
       </div>
     </div>
   );

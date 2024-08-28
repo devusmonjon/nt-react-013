@@ -1,9 +1,38 @@
 import { Link } from "react-router-dom";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { useStateValue } from "@/context";
+import { useEffect, useState } from "react";
+import { DownOutlined, SmileOutlined } from "@ant-design/icons";
+import { Dropdown, Space } from "antd";
 
 const Navbar = () => {
   const [state, dispatch] = useStateValue();
+  const [items, setItems] = useState(null);
+
+  useEffect(() => {
+    console.log(state.user?.data);
+
+    if (state.user?.data) {
+      setItems([
+        {
+          key: "1",
+          label: (
+            <h1>
+              {state.user.data.first_name} {state.user.data.last_name}
+            </h1>
+          ),
+        },
+        {
+          key: "2",
+          label: (
+            <button onClick={() => dispatch({ type: "LOGOUT" })}>LOGOUT</button>
+          ),
+        },
+      ]);
+    }
+  }, [state.user]);
+  console.log(items);
+
   return (
     <nav className="w-full py-4 sticky top-0">
       <div className="container flex justify-between items-center">
@@ -23,12 +52,23 @@ const Navbar = () => {
           </li>
           <li>
             {state.user?.accessToken ? (
-              <button
-                className="font-bold"
-                onClick={() => dispatch({ type: "LOGOUT" })}
+              <Dropdown
+                menu={{
+                  items,
+                }}
               >
-                LOGOUT
-              </button>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    <img
+                      width={50}
+                      height={50}
+                      className="object-cover rounded-full h-[50px] w-[50px] object-center"
+                      src={state.user?.data.profile_photo}
+                      alt={state.user?.data.first_name}
+                    />
+                  </Space>
+                </a>
+              </Dropdown>
             ) : (
               <Link to={"/login"} className="font-bold">
                 LOGIN
