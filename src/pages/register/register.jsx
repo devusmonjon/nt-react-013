@@ -9,6 +9,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigete = useNavigate();
   const [state, dispatch] = useStateValue();
+  const [file, setFile] = useState();
   useEffect(() => {
     if (state.user?.accessToken) {
       axios
@@ -32,40 +33,32 @@ const Login = () => {
         });
     }
   });
-  const handleLogin = (values) => {
-    setLoading(true);
+  const handleRegister = (values) => {
+    // setLoading(true);
+    let formData = new FormData();
+    formData.append("first_name", values.first_name);
+    formData.append("last_name", values.last_name);
+    formData.append("username", values.username);
+    formData.append("email", values.email);
+    formData.append("profile_photo", file);
+    formData.append("password", values.password);
+    console.log(formData);
+
     axios
-      .post("https://proxy-tau-one.vercel.app/api/v1/auth/login/", values)
+      .post("https://proxy-tau-one.vercel.app/api/v1/auth/register/", formData)
       .then((res) => {
         // navigete("/");
         if (res.data.success) {
           messageApi.success(res.data.message);
-          const tokens = {
-            accessToken: res.data.data.access,
-            refreshToekn: res.data.data.refresh,
-          };
-
-          axios
-            .get("https://proxy-tau-one.vercel.app/api/v1/user/", {
-              headers: {
-                Authorization: `Bearer ${tokens.accessToken}`,
-              },
-            })
-            .then((res) => {
-              if (res.data.success) {
-                dispatch({
-                  type: "LOGIN",
-                  payload: {
-                    ...tokens,
-                    data: res.data.data,
-                  },
-                });
-                navigete("/");
-              } else {
-                dispatch({ type: "LOGOUT" });
-                messageApi.error(res.data.message);
-              }
-            });
+          dispatch({
+            type: "LOGIN",
+            payload: {
+              accessToken: res.data.data.tokens.access,
+              refreshToken: res.data.data.tokens.refresh,
+              data: res.data.data.user,
+            },
+          });
+          navigete("/");
         } else {
           messageApi.error(res.data.message);
         }
@@ -93,23 +86,75 @@ const Login = () => {
           initialValues={{
             remember: true,
           }}
-          onFinish={handleLogin}
+          onFinish={handleRegister}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
+          <Form.Item
+            label="First Name"
+            name="first_name"
+            rules={[
+              {
+                required: true,
+                message: "First Name!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Last Name"
+            name="last_name"
+            rules={[
+              {
+                required: true,
+                message: "Last Name!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
           <Form.Item
             label="Username"
             name="username"
             rules={[
               {
                 required: true,
-                message: "Ism kiriting!",
+                message: "Username!",
               },
             ]}
           >
             <Input />
           </Form.Item>
-
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Email!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            name="profile_photo"
+            rules={[
+              {
+                required: true,
+                message: "Email!",
+              },
+            ]}
+          >
+            <Input
+              type="file"
+              onChange={(e) => {
+                setFile(e.target.files[0]);
+              }}
+            />
+          </Form.Item>
           <Form.Item
             label="Password"
             name="password"
@@ -133,7 +178,7 @@ const Login = () => {
             </Button>
           </Form.Item>
         </Form>
-        <Link to={"/register"}>Don not have account yet?</Link>
+        <Link to={"/login"}>Already have account?</Link>
       </div>
     </div>
   );
