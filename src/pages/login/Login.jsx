@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Input, message } from "antd";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useStateValue } from "@/context";
 import { data } from "autoprefixer";
 const Login = () => {
@@ -133,6 +133,7 @@ const Login = () => {
             </Button>
           </Form.Item>
         </Form>
+        <Link to={"/register"}>Don not have account yet?</Link>
         <ul className="list-disc">
           <li>Login: testuser</li>
           <li>password: testuser</li>
