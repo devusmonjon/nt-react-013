@@ -139,12 +139,12 @@ const Login = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Email"
+            label="Profile photo"
             name="profile_photo"
             rules={[
               {
                 required: true,
-                message: "Email!",
+                message: "Profile photo!",
               },
             ]}
           >
