@@ -50,6 +50,7 @@ const Login = () => {
         // navigete("/");
         if (res.data.success) {
           messageApi.success(res.data.message);
+          messageApi.success("We're redirect yo to homepage in 3 seconds");
           dispatch({
             type: "LOGIN",
             payload: {
@@ -58,7 +59,9 @@ const Login = () => {
               data: res.data.data.user,
             },
           });
-          navigete("/");
+          setTimeout(() => {
+            navigete("/");
+          }, 3000);
         } else {
           messageApi.error(res.data.message);
         }
