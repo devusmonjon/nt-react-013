@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+    * {
+        scroll-behavior: smooth;
+    }
+    .container {
+        @apply mx-auto;
+    }
+}
+
+@layer components {
+    .header .active {
+        color: blue;
+    }
+}
